@@ -2,6 +2,7 @@ package com.company.projectportal.Controller;
 
 import com.company.projectportal.entity.Users;
 import com.company.projectportal.entity.UsersType;
+import com.company.projectportal.services.UsersService;
 import com.company.projectportal.services.UsersTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ import java.util.List;
 public class UsersController {
 
     private final UsersTypeService usersTypeService;
+    private final UsersService usersService;
 
     @Autowired
-    public UsersController(UsersTypeService usersTypeService) {
+    public UsersController(UsersTypeService usersTypeService, UsersService usersService) {
         this.usersTypeService = usersTypeService;
+        this.usersService = usersService;
     }
 
     @GetMapping("/register")
@@ -31,7 +34,8 @@ public class UsersController {
 
     @PostMapping("/register/new")
     public String userRegistration (Users users) {
-        System.out.println("User:: " + users);
+//        System.out.println("User:: " + users);
+        usersService.addNew(users);
         return "dashboard";
     }
 
