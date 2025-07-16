@@ -22,7 +22,7 @@ public class CustomAuthneticationSuccessHandler implements AuthenticationSuccess
         boolean hasJobSeekerRole = authentication.getAuthorities().stream().anyMatch(r->r.getAuthority().equals("Job Seeker"));
         boolean hasRecruiterRole = authentication.getAuthorities().stream().anyMatch(r->r.getAuthority().equals("Recruiter"));
         if(hasRecruiterRole||hasJobSeekerRole) {
-            response.sendRedirect("/dashbaord/");
+            response.sendRedirect("/dashboard/");
         }
     }
 }
