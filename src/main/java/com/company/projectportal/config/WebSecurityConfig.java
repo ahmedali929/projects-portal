@@ -1,5 +1,7 @@
 package com.company.projectportal.config;
 
+import com.company.projectportal.services.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class WebSecurityConfig {
+
+    private final CustomUserDetailsService customUserDetailsService;
 
     private final String[] publicUrl = {"/",
             "/global-search/**",
@@ -27,6 +31,11 @@ public class WebSecurityConfig {
             "/*.js.map",
             "/fonts**", "/favicon.ico", "/resources/**", "/error"};
 
+    @Autowired
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
     @Bean
     protected SecurityFilterChain secrutiyFilterChain(HttpSecurity http) throws Exception{
 
@@ -41,15 +50,16 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    private AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {
 
             DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
             authenticationProvider.setPasswordEncoder(passwordEncoder());
-            authenticationProvider.setUserDetailsService();
+            authenticationProvider.setUserDetailsService(customUserDetailsService);
+            return authenticationProvider;
     }
 
     @Bean
-    private PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
