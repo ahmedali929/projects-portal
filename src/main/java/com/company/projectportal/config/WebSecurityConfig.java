@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomAuthneticationSuccessHandler customAuthneticationSuccessHandler;
 
     private final String[] publicUrl = {"/",
             "/global-search/**",
@@ -32,12 +33,13 @@ public class WebSecurityConfig {
             "/fonts**", "/favicon.ico", "/resources/**", "/error"};
 
     @Autowired
-    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService) {
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService, CustomAuthneticationSuccessHandler customAuthneticationSuccessHandler) {
         this.customUserDetailsService = customUserDetailsService;
+        this.customAuthneticationSuccessHandler = customAuthneticationSuccessHandler;
     }
 
     @Bean
-    protected SecurityFilterChain secrutiyFilterChain(HttpSecurity http) throws Exception{
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http.authenticationProvider(authenticationProvider());
 
@@ -45,6 +47,9 @@ public class WebSecurityConfig {
             auth.requestMatchers(publicUrl).permitAll();
             auth.anyRequest().authenticated();
         });
+
+        http.formLogin(form -> form.loginPage("/login").permitAll().successHandler())
+
         return http.build();
 
     }
