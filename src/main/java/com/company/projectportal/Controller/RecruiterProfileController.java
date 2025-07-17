@@ -1,7 +1,9 @@
 package com.company.projectportal.Controller;
 
+import com.company.projectportal.entity.RecruiterProfile;
 import com.company.projectportal.entity.Users;
 import com.company.projectportal.repository.UsersRepository;
+import com.company.projectportal.services.RecruiterProfileService;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,14 +12,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("recruiter-profile")
 public class RecruiterProfileController {
 
     private final UsersRepository usersRepository;
+    private final RecruiterProfileService recruiterProfileService;
 
-    public RecruiterProfileController(UsersRepository usersRepository) {
+    public RecruiterProfileController(UsersRepository usersRepository, RecruiterProfileService recruiterProfileService) {
         this.usersRepository = usersRepository;
+        this.recruiterProfileService = recruiterProfileService;
     }
 
     public String recruiterProfile(Model model) {
@@ -25,7 +31,13 @@ public class RecruiterProfileController {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
             Users users = usersRepository.findByEmail(currentUsername).orElseThrow(()-> new UsernameNotFoundException("Could not find user"));
-        }
-    }
+            Optional<RecruiterProfile> recruiterProfile = recruiterProfileService.getOne(users.getUserId());
 
+            if(!recruiterProfile.isEmpty()) {
+                model.addAttribute("profile", recruiterProfile.get());
+            }
+
+        }
+        return "recruiter-profile";
+    }
 }
