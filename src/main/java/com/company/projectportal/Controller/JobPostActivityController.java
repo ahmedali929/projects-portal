@@ -1,6 +1,7 @@
 package com.company.projectportal.Controller;
 
 import com.company.projectportal.entity.JobPostActivity;
+import com.company.projectportal.entity.Users;
 import com.company.projectportal.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -9,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class JobPostActivityController {
@@ -39,6 +41,13 @@ public class JobPostActivityController {
         model.addAttribute("jobPostActivity", new JobPostActivity());
         model.addAttribute("user", usersService.getCurrentUserProfile());
         return "add-jobs";
+    }
+
+    @PostMapping("/dashboard/addNew")
+    public String addNew(JobPostActivity jobPostActivity, Model model) {
+
+        Users user = usersService.getCurrentUser();
+        return "redirect:/dashboard/";
     }
 
 }
