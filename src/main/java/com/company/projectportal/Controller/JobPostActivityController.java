@@ -1,5 +1,6 @@
 package com.company.projectportal.Controller;
 
+import com.company.projectportal.entity.JobPostActivity;
 import com.company.projectportal.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -31,6 +32,13 @@ public class JobPostActivityController {
         }
         model.addAttribute("user", currentUserProfile);
         return "dashboard";
+    }
+
+    @GetMapping("/dashboard/add")
+    public String addJobs(Model model) {
+        model.addAttribute("jobPostActivity", new JobPostActivity());
+        model.addAttribute("user", usersService.getCurrentUserProfile());
+        return "add-jobs";
     }
 
 }
