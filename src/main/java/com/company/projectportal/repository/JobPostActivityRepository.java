@@ -1,5 +1,6 @@
 package com.company.projectportal.repository;
 
+import com.company.projectportal.entity.IRecruiterJobs;
 import com.company.projectportal.entity.JobPostActivity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
