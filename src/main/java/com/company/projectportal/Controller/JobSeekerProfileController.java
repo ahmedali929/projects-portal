@@ -41,14 +41,14 @@ public class JobSeekerProfileController {
             Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(user.getUserId());
             if (seekerProfile.isPresent()) {
                 jobSeekerProfile = seekerProfile.get();
-                if(jobSeekerProfile.getSkills().isEmpty()) {
+                if (jobSeekerProfile.getSkills().isEmpty()) {
                     skills.add(new Skills());
                     jobSeekerProfile.setSkills(skills);
                 }
+            }
                 model.addAttribute("skills", skills);
                 model.addAttribute("profile", jobSeekerProfile);
-            }
-
+        }
 
         return "job-seeker-profile";
     }
