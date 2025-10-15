@@ -22,7 +22,7 @@ public class JobSeekerProfile {
     private String state;
     private String country;
     private String workAuthorization;
-    private String empolyementType;
+    private String employmentType;
     private String resume;
     @Column(nullable=true,length = 64)
     private String profilePhoto;
@@ -46,7 +46,7 @@ public class JobSeekerProfile {
         this.state = state;
         this.country = country;
         this.workAuthorization = workAuthorization;
-        this.empolyementType = empolyementType;
+        this.employmentType = empolyementType;
         this.resume = resume;
         this.profilePhoto = profilePhoto;
         this.skills = skills;
@@ -116,12 +116,12 @@ public class JobSeekerProfile {
         this.workAuthorization = workAuthorization;
     }
 
-    public String getEmpolyementType() {
-        return empolyementType;
+    public String getEmploymentType() {
+        return employmentType;
     }
 
-    public void setEmpolyementType(String empolyementType) {
-        this.empolyementType = empolyementType;
+    public void setEmploymentType(String employmentType) {
+        this.employmentType = employmentType;
     }
 
     public String getResume() {
@@ -166,7 +166,7 @@ public class JobSeekerProfile {
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
                 ", workAuthorization='" + workAuthorization + '\'' +
-                ", empolyementType='" + empolyementType + '\'' +
+                ", employmentType='" + employmentType + '\'' +
                 ", resume='" + resume + '\'' +
                 ", profilePhoto='" + profilePhoto + '\'' +
                 '}';
