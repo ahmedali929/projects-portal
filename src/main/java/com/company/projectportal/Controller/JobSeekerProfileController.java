@@ -7,6 +7,7 @@ import com.company.projectportal.repository.UsersRepository;
 import com.company.projectportal.services.JobSeekerProfileService;
 import com.company.projectportal.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -115,6 +116,10 @@ public class JobSeekerProfileController {
         Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(id);
         model.addAttribute("profile", seekerProfile.get());
         return "job-seeker-profile";
+    }
+
+    @GetMapping("/downloadResume")
+    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userId") String userId) {
     }
 
 
