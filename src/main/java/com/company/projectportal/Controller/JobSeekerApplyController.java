@@ -49,10 +49,29 @@ public class JobSeekerApplyController {
                 }
                 } else {
                 JobSeekerProfile user = jobSeekerProfileService.getCurrentSeekerProfile();
+                if (user != null) {
+                    boolean exists = false;
+                    boolean saved = false;
+                    for (JobSeekerApply jobSeekerApply : jobSeekerApplyList) {
+                        if(jobSeekerApply.getUserId().getUserAccountId() == user.getUserAccountId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (JobSeekerSave jobSeekerSave : jobSeekerSaveList) {
+                        if (jobSeekerSave.getUserId().getUserAccountId() == user.getUserAccountId()) {
+                            saved = true;
+                            break;
+                        }
+                    }
+                    model.addAttribute("alreadyApplied", exists);
+                    model.addAttribute("alreadySaved", saved);
+                }
             }
         }
 
-
+        JobSeekerApply jobSeekerApply = new JobSeekerApply();
+        model.addAttribute("applyJob", jobSeekerApply);
 
         model.addAttribute("jobDetails", jobDetails);
         model.addAttribute("user", usersService.getCurrentUserProfile());
