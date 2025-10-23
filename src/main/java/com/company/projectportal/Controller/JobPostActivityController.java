@@ -13,12 +13,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -44,9 +46,9 @@ public class  JobPostActivityController {
                              @RequestParam(value = "remoteOnly", required = false) String remoteOnly,
                              @RequestParam(value = "officeOnly", required = false) String officeOnly,
                              @RequestParam(value = "partialRemote", required = false) String partialRemote,
-                             @RequestParam(value = "today", required = false) String today,
-                             @RequestParam(value = "days7", required = false) String days7,
-                             @RequestParam(value = "days30", required = false) String days30) {
+                             @RequestParam(value = "today", required = false) boolean today,
+                             @RequestParam(value = "days7", required = false) boolean days7,
+                             @RequestParam(value = "days30", required = false) boolean days30) {
 
         model.addAttribute("partTime", Objects.equals(partTime, "Part-Time"));
         model.addAttribute("fullTime", Objects.equals(fullTime, "Full-Time"));
@@ -88,6 +90,12 @@ public class  JobPostActivityController {
             type = false;
         }
 
+        if(!dateSearchFlag && !remote && !type && !StringUtils.hasText(job) && !StringUtils.hasText(location)) {
+            jobPost = jobPostActivityService.getAll();
+        } else {
+            jobPost = jobPostActivityService.search(job, location, Arrays.asList(partTime, fullTime, freelance), Arrays.asList(remoteOnly, officeOnly, partialRemote), searchDate);
+        }
+
 
         Object currentUserProfile = usersService.getCurrentUserProfile();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -97,6 +105,9 @@ public class  JobPostActivityController {
             model.addAttribute("username",currentUsername);
             if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("Recruiter"))) {
                 List<RecruiterJobsDto> recruiterJobs = jobPostActivityService.getRecruiterJobs(((RecruiterProfile)currentUserProfile).getUserAccountId());
+                model.addAttribute("jobPost", recruiterJobs);
+            } else {
+
             }
         }
         model.addAttribute("user", currentUserProfile);
