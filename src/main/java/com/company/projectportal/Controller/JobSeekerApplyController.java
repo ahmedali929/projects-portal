@@ -1,9 +1,6 @@
 package com.company.projectportal.Controller;
 
-import com.company.projectportal.entity.JobPostActivity;
-import com.company.projectportal.entity.JobSeekerApply;
-import com.company.projectportal.entity.JobSeekerSave;
-import com.company.projectportal.entity.RecruiterProfile;
+import com.company.projectportal.entity.*;
 import com.company.projectportal.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -47,6 +44,11 @@ public class JobSeekerApplyController {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("Recruiter"))) {
                 RecruiterProfile user = recruiterProfileService.getCurrentRecruiterProfile();
+                if(user != null) {
+                    model.addAttribute("applyList", jobSeekerApplyList);
+                }
+                } else {
+                JobSeekerProfile user = jobSeekerProfileService.getCurrentSeekerProfile();
             }
         }
 
