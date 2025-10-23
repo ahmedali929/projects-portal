@@ -124,7 +124,7 @@ public class JobSeekerProfileController {
     }
 
     @GetMapping("/downloadResume")
-    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userId") String userId) {
+    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userID") String userId) {
         FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
         Resource resource = null;
 
