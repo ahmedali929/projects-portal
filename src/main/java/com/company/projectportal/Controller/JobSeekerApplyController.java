@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class JobSeekerApplyController {
@@ -85,6 +87,17 @@ public class JobSeekerApplyController {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
             Users user = usersService.findByEmail(currentUsername);
+            Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(user.getUserId());
+            JobPostActivity jobPostActivity = jobPostActivityService.getOne(id);
+            if (seekerProfile.isPresent() && jobPostActivity != null) {
+                jobSeekerApply.setUserId(seekerProfile.get());
+                jobSeekerApply.setJob(jobPostActivity);
+                jobSeekerApply.setApplyDate(new Date());
+            } else {
+                throw new RuntimeException("User not found");
+            }
+            jobSeekerApplyService.addNew(jobSeekerApply);
         }
+        return "redirect:/dashboard/";
     }
 }
