@@ -12,9 +12,13 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -52,7 +56,20 @@ public class JobSeekerSaveController {
         return "redirect:/dashboard";
     }
 
-    public String
+    @GetMapping("saved-jobs/")
+    public String savedJobs(Model model){
+        List<JobPostActivity> jobPost = new ArrayList<>();
+        Object currentUserProfile = usersService.getCurrentUserProfile();
+
+        List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService.getCandidatesJob((JobSeekerProfile) currentUserProfile);
+        for (JobSeekerSave jobSeekerSave : jobSeekerSaveList) {
+            jobPost.add(jobSeekerSave.getJob());
+        }
+
+        model.addAttribute("jobPost", jobPost);
+        model.addAttribute("user", currentUserProfile);
+        return "saved-jobs";
+    }
 
 
 
