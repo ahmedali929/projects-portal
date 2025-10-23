@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -76,5 +77,14 @@ public class JobSeekerApplyController {
         model.addAttribute("jobDetails", jobDetails);
         model.addAttribute("user", usersService.getCurrentUserProfile());
         return "job-details";
+    }
+
+    @PostMapping("job-details/apply/{id}")
+    public String apply(@PathVariable("id") int id, JobSeekerApply jobSeekerApply){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUsername = authentication.getName();
+            Users user = usersService.findByEmail(currentUsername);
+        }
     }
 }
