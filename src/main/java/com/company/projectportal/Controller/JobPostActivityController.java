@@ -1,10 +1,8 @@
 package com.company.projectportal.Controller;
 
-import com.company.projectportal.entity.JobPostActivity;
-import com.company.projectportal.entity.RecruiterJobsDto;
-import com.company.projectportal.entity.RecruiterProfile;
-import com.company.projectportal.entity.Users;
+import com.company.projectportal.entity.*;
 import com.company.projectportal.services.JobPostActivityService;
+import com.company.projectportal.services.JobSeekerApplyService;
 import com.company.projectportal.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -30,11 +28,13 @@ public class  JobPostActivityController {
 
     private final UsersService usersService;
     private final JobPostActivityService jobPostActivityService;
+    private final JobSeekerApplyService jobSeekerApplyService;
 
     @Autowired
-    public JobPostActivityController(UsersService usersService, JobPostActivityService jobPostActivityService) {
+    public JobPostActivityController(UsersService usersService, JobPostActivityService jobPostActivityService, JobSeekerApplyService jobSeekerApplyService) {
         this.usersService = usersService;
         this.jobPostActivityService = jobPostActivityService;
+        this.jobSeekerApplyService = jobSeekerApplyService;
     }
 
     @GetMapping("/dashboard/")
@@ -61,7 +61,6 @@ public class  JobPostActivityController {
         model.addAttribute("days30", days30);
         model.addAttribute("job", job);
         model.addAttribute("location", location);
-
         LocalDate searchDate = null;
         List<JobPostActivity> jobPost = null;
         boolean dateSearchFlag = true;
@@ -107,7 +106,7 @@ public class  JobPostActivityController {
                 List<RecruiterJobsDto> recruiterJobs = jobPostActivityService.getRecruiterJobs(((RecruiterProfile)currentUserProfile).getUserAccountId());
                 model.addAttribute("jobPost", recruiterJobs);
             } else {
-
+                List<JobSeekerApply> jobSeekerApplyList = jobSeekerApplyService.getCandidatesJobs((JobSeekerProfile) currentUserProfile);
             }
         }
         model.addAttribute("user", currentUserProfile);
