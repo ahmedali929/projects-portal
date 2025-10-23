@@ -5,12 +5,17 @@ import com.company.projectportal.entity.Skills;
 import com.company.projectportal.entity.Users;
 import com.company.projectportal.repository.UsersRepository;
 import com.company.projectportal.services.JobSeekerProfileService;
+import com.company.projectportal.util.FileDownloadUtil;
 import com.company.projectportal.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -120,6 +125,26 @@ public class JobSeekerProfileController {
 
     @GetMapping("/downloadResume")
     public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userId") String userId) {
+        FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
+        Resource resource = null;
+
+        try {
+            resource = fileDownloadUtil.getFileAsResource("photos/candidate/" + userId, fileName);
+        } catch (IOException io) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(resource==null) {
+            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+        }
+
+        String contentType = "application/octet-stream";
+        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION,headerValue)
+                .body(resource);
+
     }
 
 
